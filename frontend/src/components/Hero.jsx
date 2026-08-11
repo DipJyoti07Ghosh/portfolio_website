@@ -6,14 +6,14 @@ import { Button } from './ui/button';
 import profileImg from '../assets/myimage.png';
 import { Mail, ExternalLink } from 'lucide-react';
 
+const texts = ['Tech Enthusiast', 'CSE (AI & ML) Student'];
+
 const Hero = () => {
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
-
-  const texts = ['Tech Enthusiast', 'CSE (AI & ML) Student'];
 
   const ref = useRef(null);
   const requestRef = useRef(null);
