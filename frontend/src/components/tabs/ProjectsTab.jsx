@@ -21,9 +21,7 @@ const ProjectsTab = () => {
 
   const handleMouseDown = (e) => {
     isDragging.current = true;
-
     startX.current = e.pageX - scrollRef.current.offsetLeft;
-
     scrollLeft.current = scrollRef.current.scrollLeft;
   };
 
@@ -37,13 +35,9 @@ const ProjectsTab = () => {
 
   const handleMouseMove = (e) => {
     if (!isDragging.current) return;
-
     e.preventDefault();
-
     const x = e.pageX - scrollRef.current.offsetLeft;
-
     const walk = (x - startX.current) * 1.5;
-
     scrollRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
@@ -52,19 +46,19 @@ const ProjectsTab = () => {
   // ==========================================
 
   useEffect(() => {
-  console.log("API URL =", process.env.REACT_APP_API_URL);
-  fetch(`${process.env.REACT_APP_API_URL}/api/projects`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Projects:", data);
-      setProjects(data);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error(err);
-      setLoading(false);
-    });
-}, []);
+    console.log("API URL =", process.env.REACT_APP_API_URL);
+    fetch(`${process.env.REACT_APP_API_URL}/api/projects`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Projects:", data);
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
   // ==========================================
   // SHOW MORE / SHOW LESS
@@ -80,10 +74,8 @@ const ProjectsTab = () => {
     hidden: {
       opacity: 0,
     },
-
     visible: {
       opacity: 1,
-
       transition: {
         staggerChildren: 0.15,
       },
@@ -98,25 +90,21 @@ const ProjectsTab = () => {
           x: -80,
         };
       }
-
       if (index % 3 === 1) {
         return {
           opacity: 0,
           y: 80,
         };
       }
-
       return {
         opacity: 0,
         x: 80,
       };
     },
-
     visible: {
       opacity: 1,
       x: 0,
       y: 0,
-
       transition: {
         type: "spring",
         stiffness: 80,
@@ -134,16 +122,14 @@ const ProjectsTab = () => {
   };
 
   if (loading) {
-  return (
-    <div className="flex justify-center items-center py-20">
-      <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
-    </div>
-  );
-}
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
+      </div>
+    );
+  }
 
   return (
-
-    
     <>
       {/* ======================================
           PROJECT GRID / MOBILE SLIDER
@@ -336,12 +322,13 @@ const ProjectsTab = () => {
                       ))}
                     </div>
 
-                    {/* BUTTONS */}
+                    {/* BUTTONS: Stacked vertically on mobile, side-by-side on larger screens */}
 
                     <div
                       className="
                           mt-auto
                           flex
+                          flex-col sm:flex-row
                           gap-3
                         "
                       onClick={(e) => e.stopPropagation()}
@@ -361,7 +348,7 @@ const ProjectsTab = () => {
                           }
                         }}
                         className="
-                            flex-1
+                            w-full sm:flex-1
                             bg-purple-600
                             text-white
                             hover:bg-zinc-600
@@ -392,7 +379,7 @@ const ProjectsTab = () => {
                           }
                         }}
                         className="
-                            flex-1
+                            w-full sm:flex-1
                             border-zinc-700
                             text-purple-700
                             hover:bg-zinc-600
@@ -521,21 +508,18 @@ const ProjectsTab = () => {
                     </div>
                   </div>
 
-                  {/* BACK BUTTON / HINT */}
+                  {/* FLIP HINT (Consistent with front side) */}
 
-                  <div
+                  <p
                     className="
-                      w-full
-                      py-3
                       text-center
-                      rounded-lg
-                      bg-purple-600
-                      text-white
-                      font-semibold
+                      text-xs
+                      text-gray-400
+                      mt-3
                     "
                   >
-                    Click to Go Back
-                  </div>
+                    Click card to flip back
+                  </p>
                 </div>
               </motion.div>
             </motion.div>
