@@ -10,7 +10,7 @@ const CertificatesTab = () => {
   const [selectedCert, setSelectedCert] = useState(null);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // 🔥 DRAG SCROLL
+  // DRAG SCROLL
   const scrollRef = useRef(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
@@ -45,10 +45,7 @@ const CertificatesTab = () => {
     ? certificates
     : certificates.slice(0, 3);
 
-  // ==========================================
   // FETCH CERTIFICATES
-  // ==========================================
-
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/certificates`)
       .then((res) => res.json())
@@ -62,6 +59,7 @@ const CertificatesTab = () => {
         setLoading(false);
       });
   }, []);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -72,7 +70,10 @@ const CertificatesTab = () => {
 
   return (
     <>
-      {/* GRID + MOBILE SLIDER */}
+      {/* ============================= */}
+      {/* CERTIFICATE GRID / SLIDER */}
+      {/* ============================= */}
+
       <motion.div
         ref={scrollRef}
         layout
@@ -113,97 +114,182 @@ const CertificatesTab = () => {
               setIsFlipped(false);
             }}
           >
-            {/* CARD IMAGE */}
-            <div className="relative h-[250px]">
+            {/* 2:1 IMAGE CONTAINER */}
+            <div
+              className="
+                relative
+                w-full
+                aspect-[2/1]
+                bg-zinc-950
+                overflow-hidden
+              "
+            >
               <img
                 src={`${process.env.REACT_APP_API_URL}/api/certificates/image/${cert._id}`}
                 alt={cert.title}
                 loading="lazy"
-                className="w-full h-full object-cover"
+                className="
+                  w-full
+                  h-full
+                  object-contain
+                  block
+                "
               />
             </div>
 
+            {/* CARD DETAILS */}
             <div className="p-4">
-              <h3 className="text-white font-bold">{cert.title}</h3>
+              <h3 className="text-white font-bold">
+                {cert.title}
+              </h3>
 
-              <p className="text-purple-400 text-sm">{cert.issuer}</p>
+              <p className="text-purple-400 text-sm">
+                {cert.issuer}
+              </p>
 
-              <p className="text-gray-500 text-sm">{cert.date}</p>
+              <p className="text-gray-500 text-sm">
+                {cert.date}
+              </p>
             </div>
           </motion.div>
         ))}
       </motion.div>
 
+      {/* ============================= */}
       {/* SHOW MORE */}
+      {/* ============================= */}
+
       <div className="text-center mt-2 mb-20">
-        <Button onClick={() => setShowAll(!showAll)} className="hover:bg-gray-600">
+        <Button
+          onClick={() => setShowAll(!showAll)}
+          className="hover:bg-gray-600"
+        >
           {showAll ? "Show Less" : "Show More"}
-          <ChevronDown className="ml-2" />
+
+          <ChevronDown
+            className={`ml-2 transition-transform ${
+              showAll ? "rotate-180" : ""
+            }`}
+          />
         </Button>
       </div>
 
+      {/* ============================= */}
       {/* MODAL */}
+      {/* ============================= */}
+
       <AnimatePresence>
         {selectedCert && (
           <motion.div
             className="
-              fixed inset-0 bg-black/80 backdrop-blur-md
-              z-50 flex items-center justify-center
+              fixed inset-0
+              bg-black/80
+              backdrop-blur-md
+              z-50
+              flex
+              items-center
+              justify-center
+              p-4
             "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedCert(null)}
           >
+            {/* CLOSE BUTTON */}
             <button
-              className="absolute top-6 right-6 text-white z-50"
+              className="
+                absolute
+                top-6
+                right-6
+                text-white
+                z-50
+                hover:text-purple-400
+                transition
+              "
               onClick={() => setSelectedCert(null)}
             >
               <X size={28} />
             </button>
 
+            {/* MODAL CARD */}
             <motion.div
               layoutId={`card-${selectedCert._id}`}
               className="
-                w-[90%] max-w-4xl h-[560px]
-                rounded-2xl overflow-hidden
+                w-[95%]
+                max-w-5xl
+                max-h-[90vh]
+                rounded-2xl
+                overflow-hidden
               "
-              style={{ perspective: "1000px" }}
+              style={{
+                perspective: "1000px",
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <motion.div
-                className="relative w-full h-full"
+                className="relative w-full min-h-[500px]"
                 animate={{
                   rotateY: isFlipped ? 180 : 0,
                 }}
-                transition={{ duration: 0.5 }}
+                transition={{
+                  duration: 0.5,
+                }}
                 style={{
                   transformStyle: "preserve-3d",
                 }}
               >
+                {/* ============================= */}
                 {/* FRONT */}
+                {/* ============================= */}
+
                 <div
                   className="
-                    absolute w-full h-full
+                    absolute
+                    inset-0
+                    w-full
                     bg-zinc-900
+                    rounded-2xl
+                    overflow-hidden
                   "
                   style={{
                     backfaceVisibility: "hidden",
                   }}
                   onClick={() => setIsFlipped(true)}
                 >
-                  <div className="relative h-[400px]">
-                    <img
-                      src={`${process.env.REACT_APP_API_URL}/api/certificates/image/${selectedCert._id}`}
-                      alt={selectedCert.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  {/* 2:1 CERTIFICATE IMAGE */}
 
                   <div
                     className="
-                      p-5 flex flex-col
-                      h-[160px] justify-between
+                      relative
+                      w-full
+                      aspect-[2/1]
+                      bg-black
+                      flex
+                      items-center
+                      justify-center
+                    "
+                  >
+                    <img
+                      src={`${process.env.REACT_APP_API_URL}/api/certificates/image/${selectedCert._id}`}
+                      alt={selectedCert.title}
+                      className="
+                        w-full
+                        h-full
+                        object-contain
+                      "
+                    />
+                  </div>
+
+                  {/* DETAILS */}
+
+                  <div
+                    className="
+                      p-5
+                      flex
+                      flex-col
+                      justify-between
+                      min-h-[160px]
                     "
                   >
                     <div>
@@ -211,16 +297,28 @@ const CertificatesTab = () => {
                         {selectedCert.title}
                       </h2>
 
-                      <p className="text-purple-400">{selectedCert.issuer}</p>
+                      <p className="text-purple-400">
+                        {selectedCert.issuer}
+                      </p>
 
-                      <p className="text-gray-400">{selectedCert.date}</p>
+                      <p className="text-gray-400">
+                        {selectedCert.date}
+                      </p>
                     </div>
 
                     <div
                       className="
-                        w-full py-2 text-center rounded-lg
-                        bg-purple-600 text-white
-                        font-semibold cursor-pointer
+                        w-full
+                        py-2
+                        mt-4
+                        text-center
+                        rounded-lg
+                        bg-purple-600
+                        text-white
+                        font-semibold
+                        cursor-pointer
+                        hover:bg-purple-700
+                        transition
                       "
                     >
                       View More
@@ -228,13 +326,22 @@ const CertificatesTab = () => {
                   </div>
                 </div>
 
+                {/* ============================= */}
                 {/* BACK */}
+                {/* ============================= */}
+
                 <div
                   className="
-                    absolute w-full h-full
-                    rounded-2xl p-6
-                    backdrop-blur-lg bg-white/10
-                    border border-white/20
+                    absolute
+                    inset-0
+                    w-full
+                    min-h-[500px]
+                    rounded-2xl
+                    p-6
+                    backdrop-blur-lg
+                    bg-white/10
+                    border
+                    border-white/20
                   "
                   style={{
                     transform: "rotateY(180deg)",
@@ -248,20 +355,31 @@ const CertificatesTab = () => {
                         {selectedCert.title}
                       </h2>
 
-                      <p className="text-purple-300">{selectedCert.issuer}</p>
+                      <p className="text-purple-300">
+                        {selectedCert.issuer}
+                      </p>
 
-                      <p className="text-gray-300 mb-4">{selectedCert.date}</p>
+                      <p className="text-gray-300 mb-4">
+                        {selectedCert.date}
+                      </p>
 
-                      <p className="text-gray-200 text-sm">
+                      <p className="text-gray-200 text-sm leading-relaxed">
                         {selectedCert.description}
                       </p>
                     </div>
 
                     <div
                       className="
-                        w-full py-2 text-center rounded-lg
-                        bg-purple-600 text-white
-                        font-semibold cursor-pointer
+                        w-full
+                        py-2
+                        text-center
+                        rounded-lg
+                        bg-purple-600
+                        text-white
+                        font-semibold
+                        cursor-pointer
+                        hover:bg-purple-700
+                        transition
                       "
                     >
                       Go Back
